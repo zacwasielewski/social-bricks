@@ -11,6 +11,7 @@
         options: {
         	secure: null,
             networks: [],
+            max_items: 20
         },
 		
         _create: function ( settings ) {
@@ -24,9 +25,11 @@
 					$.proxy(this.getFeedItems,this)
 				)
 			)
-			.then(function (results) {
-				console.log(results);
-			});
+			.then(
+				$.proxy(function (results) {
+					console.log( this.sortItems(this.mergeItemsArrays(results)) );
+				},this)
+			);
 		
         },
 		
@@ -83,15 +86,13 @@
         	return deferred.promise;
         },
         
-        mergeItems: function (  ) {
-        	
-        	
-        	
+        mergeItemsArrays: function ( items_arrays ) {
+			return [].concat.apply([],items_arrays);
         },
         
-        sortItems: function () {
+        sortItems: function ( items ) {
         	
-        	
+        	return items;
         	
         },
         
