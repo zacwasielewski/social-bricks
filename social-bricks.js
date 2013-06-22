@@ -11,7 +11,8 @@
         options: {
         	secure: null,
             networks: [],
-            max_items: 20
+            max_items: 20,
+            date_format: "dddd, MMMM Do YYYY, h:mm:ss a"
         },
 		
         _create: function ( settings ) {
@@ -150,7 +151,7 @@
 							body: item.message,
 							author: item.from.name,
 							source: 'Facebook',
-							date: item.created_time,
+							date: moment(item.created_time),
 							image: ''
 						}
 					});
@@ -173,7 +174,7 @@
 							body: item.content,
 							author: item.author,
 							source: 'RSS',
-							date: item.publishedDate,
+							date: moment(item.publishedDate),
 							image: ''
 						}
 					});
@@ -193,7 +194,7 @@
 							body: item.message,
 							author: item.from.name,
 							source: 'Twitter',
-							date: item.created_time,
+							date: moment(item.created_time),
 							image: ''
 						}
 					});
