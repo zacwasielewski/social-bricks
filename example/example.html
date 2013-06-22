@@ -8,10 +8,19 @@
 	<link rel="stylesheet" href="example.css">
 </head>
 <body>
-
-	<ul id="social-bricks">
+	
+	<ul class="social-bricks">
 		{{#each items}}
-			<li>{{this.title}}</li>
+			<li class="social-bricks-item">
+				{{#if title}}
+				<h2>{{{title}}}</h2>
+					{{/if}}
+				{{#if image}}
+					<img src="{{image}}">
+				{{/if}}
+				<p>{{{body}}}</p>
+				<date>{{date}}</date>
+			</li>
 		{{/each}}
 	</ul>
 	
@@ -22,6 +31,7 @@
 <script src="../q.min.js"></script>
 <script src="../handlebars.js"></script>
 <script src="../moment.min.js"></script>
+<script src="../jquery.isotope.min.js"></script>
 <script src="../jquery.xdomainajax.js"></script>
 <script src="../social-bricks.js"></script>
 <script src="example.js"></script>

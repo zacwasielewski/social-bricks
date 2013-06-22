@@ -9,11 +9,14 @@
     $.widget( "zacwasielewski.socialbricks" , {
 
         options: {
-        	secure: null,
             networks: [],
+        	secure: null,
             max_items: 20,
+            max_title_length: 50,
+            max_body_length: 200,
             date_format: "dddd, MMMM Do YYYY, h:mm:ss a",
-            template: null
+            template: null,
+            layout: null
         },
 		
         _create: function ( settings ) {
@@ -25,6 +28,16 @@
 				this.options.template = this.element.html();
 			}
             
+        },
+		
+        _destroy: function () {
+            alert('_destroy');
+        },
+        
+        fetch: function (callback) {
+        	
+        	var that = this;
+        	
             Q
 			.all(
 				this.options.networks.map(
@@ -33,22 +46,16 @@
 			)
 			.then(
 				$.proxy(function (results) {
-					this.renderFeedItems(this.sortItems(this.mergeItemsArrays(results)));
+					var html = this.renderFeedItems(this.sortItems(this.mergeItemsArrays(results)));
+					if (callback !== undefined) {
+						this.element.empty();
+						callback(html);
+					} else {
+						this.element.html(html);				
+					}
 				},this)
 			);
-		
-        },
-		
-        _destroy: function () {
-            alert('_destroy');
-        },
-        
-        renderFeedItems: function ( items ) {
         	
-			var template = this.options.template,
-				render = Handlebars.compile(template);
-        	
-        	this.element.html(render({items:items}));
         },
         
         getFeedItems: function ( network ) {
@@ -74,7 +81,13 @@
         },
         
         parseFeedData: function ( network, data ) {
-        	return this.networkUrlSettings[network.name].parser(data);
+        	return this.networkUrlSettings[network.name].parser(data,this);
+        },
+        
+        renderFeedItems: function ( items ) {
+			var template = this.options.template,
+				render = Handlebars.compile(template);
+        	return render({items:items});
         },
         
         fetchRemote: function ( url, customSettings ) {
@@ -157,15 +170,15 @@
 					max_items: 10,
 				},
 				required: [ 'access_token' ],
-				parser: function (data) {
-					return data.data.map(function(item){
+				parser: function (json,widget) {
+					return json.data.map(function(item){
 						return {
-							title: item.description,
-							body: item.message,
+							title: widget._truncateText(item.description,widget.options.max_title_length),
+							body:  widget._truncateText(item.message,widget.options.max_body_length),
 							author: item.from.name,
 							source: 'Facebook',
-							date: moment(item.created_time),
-							image: ''
+							date: moment(item.created_time).from(),
+							image: item.picture
 						}
 					});
 				}
@@ -180,15 +193,15 @@
 				prepare: {
 					url: function (arg) { return encodeURIComponent(arg) }
 				},
-				parser: function (data) {
-					return data.responseData.feed.entries.map(function(item){
+				parser: function (json,widget) {
+					return json.responseData.feed.entries.map(function(item){
 						return {
-							title: item.title,
-							body: item.content,
+							title: widget._truncateText(widget._stripHTML(item.title),widget.options.max_title_length),
+							body:  widget._truncateText(widget._stripHTML(item.content),widget.options.max_body_length),
 							author: item.author,
 							source: 'RSS',
-							date: moment(item.publishedDate),
-							image: ''
+							date: moment(item.publishedDate).from(),
+							image: widget._getNthImageFromHTML(item.content,0)
 						}
 					});
 				}
@@ -200,8 +213,8 @@
 					max_items: 10,
 				},
 				required: [ 'username' ],
-				parser: function (data) {
-					return data.map(function(item){
+				parser: function (json,that) {
+					return json.map(function(item){
 						return {
 							title: item.description,
 							body: item.message,
@@ -214,6 +227,39 @@
 				}
 			},
 		},
+
+		_stripHTML: function (html) {
+			var tmp = document.createElement("DIV");
+			tmp.innerHTML = html;
+			return tmp.textContent||tmp.innerText;
+		},
+
+		_getNthImageFromHTML: function (html,n) {
+			var tmp = document.createElement("DIV");
+			tmp.innerHTML = html;
+			var img = $(tmp).find('img').get(n);
+			return (img && img.src) || null;
+		},
+		
+		_truncateText: function (text, maxLength, ellipseText) {
+			ellipseText = ellipseText || '&hellip;';
+
+			if (!text || text.length < maxLength) 
+				return text;
+
+			//Find the last piece of string that contain a series of not A-Za-z0-9_ followed by A-Za-z0-9_ starting from maxLength
+			var m = text.substr(0, maxLength).match(/([^A-Za-z0-9_]*)[A-Za-z0-9_]*$/);
+			if(!m) return ellipseText;
+
+			//Position of last output character
+			var lastCharPosition = maxLength-m[0].length;
+
+			//If it is a space or "[" or "(" or "{" then stop one before. 
+			if(/[\s\(\[\{]/.test(text[lastCharPosition])) lastCharPosition--;
+
+			//Make sure we do not just return a letter..
+			return (lastCharPosition ? text.substr(0, lastCharPosition+1) : '') + ellipseText;
+		}
 		
         //destroy: function () {
         //    alert('destroy');
