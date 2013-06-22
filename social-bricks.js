@@ -12,13 +12,18 @@
         	secure: null,
             networks: [],
             max_items: 20,
-            date_format: "dddd, MMMM Do YYYY, h:mm:ss a"
+            date_format: "dddd, MMMM Do YYYY, h:mm:ss a",
+            template: null
         },
 		
         _create: function ( settings ) {
 
 			// access the element on which the widget was called via this.element
             // access the options defined above via this.options
+
+			if (this.options.template === null) {
+				this.options.template = this.element.html();
+			}
             
             Q
 			.all(
@@ -28,7 +33,7 @@
 			)
 			.then(
 				$.proxy(function (results) {
-					console.log( this.sortItems(this.mergeItemsArrays(results)) );
+					this.renderFeedItems(this.sortItems(this.mergeItemsArrays(results)));
 				},this)
 			);
 		
@@ -36,6 +41,14 @@
 		
         _destroy: function () {
             alert('_destroy');
+        },
+        
+        renderFeedItems: function ( items ) {
+        	
+			var template = this.options.template,
+				render = Handlebars.compile(template);
+        	
+        	this.element.html(render({items:items}));
         },
         
         getFeedItems: function ( network ) {

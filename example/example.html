@@ -9,8 +9,12 @@
 </head>
 <body>
 
-	<div id="social-bricks"></div>
-
+	<ul id="social-bricks">
+		{{#each items}}
+			<li>{{this.title}}</li>
+		{{/each}}
+	</ul>
+	
 </body>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
