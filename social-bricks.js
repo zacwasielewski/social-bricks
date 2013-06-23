@@ -173,6 +173,7 @@
 				parser: function (json,widget) {
 					return json.data.map(function(item){
 						return {
+							network: 'facebook',
 							title: widget._truncateText(item.description,widget.options.max_title_length),
 							body:  widget._truncateText(item.message,widget.options.max_body_length),
 							author: item.from.name,
@@ -196,6 +197,7 @@
 				parser: function (json,widget) {
 					return json.responseData.feed.entries.map(function(item){
 						return {
+							network: 'rss',
 							title: widget._truncateText(widget._stripHTML(item.title),widget.options.max_title_length),
 							body:  widget._truncateText(widget._stripHTML(item.content),widget.options.max_body_length),
 							author: item.author,
@@ -216,6 +218,7 @@
 				parser: function (json,that) {
 					return json.map(function(item){
 						return {
+							network: 'twitter',
 							title: item.description,
 							body: item.message,
 							author: item.from.name,

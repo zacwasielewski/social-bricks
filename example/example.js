@@ -10,18 +10,18 @@ container.socialbricks({
 		{ name:'rss', url:'http://feeds.feedburner.com/good/lbvp' },
 		{ name:'rss', url:'http://www.makebetterwebsites.com/feed/' },
 		//{name:'craigslist',id:'boo',areaName:'southcoast'},
-		//{name:'rss',id:'http://www.houzz.com/getGalleries/featured/out-rss'}
 		{ name:'rss', url:'https://www.facebook.com/feeds/page.php?format=rss20&id=7092621023', secure:'detect' }
 	],
 	max_items: 20,
-	//max_body_chars: 100,
 });
+
+//container.socialbricks("fetch");
 
 container.socialbricks("fetch",function(items){
 	container.html(items);
 	container.imagesLoaded( function(){
 		container.isotope({
-			itemSelector: '.social-bricks-item',
+			itemSelector: '.item',
 			layoutMode: 'masonry'
 		});
 	});

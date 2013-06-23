@@ -1,5 +1,6 @@
 body {
-	font-family: sans-serif;
+	color: #333;
+	font-size: 87%;
 }
 
 .social-bricks {
@@ -8,14 +9,42 @@ body {
 	padding: 0;
 }
 
-.social-bricks-item{
+.social-bricks .item {
 	width: 300px;
 	border: 1px solid #ccc;
 	margin: 10px;
-	padding: 10px;
-	overflow: hidden ;
+	padding: 0;
+	overflow: hidden;
 }
 
-.social-bricks-item img{
+.social-bricks .item h1 {
+	font-size: 1.5em;
+	margin: 10px 0;
+	padding: 0 10px;
+}
+
+.social-bricks .item .image {
+	margin: 0;
+	padding: 0;
+	background-color: #333;
+	display: block;
+	text-align: center;
+}
+
+.social-bricks .item .image img {
 	max-width: 100%;
+	margin: 0;
+	display: block;
+}
+
+.social-bricks .item .body {
+	margin: 10px 0;
+	padding: 0 10px;
+}
+
+.social-bricks .item .source {
+	font-weight: bold;
+	margin: 10px 0;
+	padding: 10px 10px 0 10px;
+	border-top: 1px solid #eee;
 }

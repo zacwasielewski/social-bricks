@@ -4,25 +4,27 @@
 	<meta charset="utf-8" />
 	<title>Social Bricks Example</title>
 	<meta name="generator" content="BBEdit 10.5" />
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.2.0/pure-min.css">
 	<link rel="stylesheet" href="../social-bricks.css">
 	<link rel="stylesheet" href="example.css">
 </head>
 <body>
 	
-	<ul class="social-bricks">
+	<div class="social-bricks">
 		{{#each items}}
-			<li class="social-bricks-item">
+			<article class="item">
 				{{#if title}}
-				<h2>{{{title}}}</h2>
-					{{/if}}
-				{{#if image}}
-					<img src="{{image}}">
+					<h1>{{{title}}}</h1>
 				{{/if}}
-				<p>{{{body}}}</p>
-				<date>{{date}}</date>
-			</li>
+				{{#if image}}
+					<div class="image"><img src="{{image}}"></div>
+				{{/if}}
+				<p class="body">{{{body}}}</p>
+				<a href="{{link}}"></a>
+				<p class="source"><time>{{date}}</time> from {{source}}</p>
+			</article>
 		{{/each}}
-	</ul>
+	</div>
 	
 </body>
 
