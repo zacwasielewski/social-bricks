@@ -130,7 +130,9 @@
         		args = $.extend({}, networkUrlSettings.defaults, network)
         	;
         	
-        	if (this.options.secure !== null) {
+        	if (this.options.secure === null) {
+        		args.protocol = '';
+        	} else {
         		switch (this.options.secure) {
         			case 'detect':	args.protocol = ''; break;
         			case true:		args.protocol = 'https:'; break;
