@@ -46,7 +46,13 @@
 			)
 			.then(
 				$.proxy(function (results) {
-					var html = this.renderFeedItems(this.sortItems(this.mergeItemsArrays(results)));
+				
+					var items = this.sortItems(this.mergeItemsArrays(results)),
+						html;
+					
+					items.splice( this.options.max_items, (items.length - this.options.max_items) );
+					html = this.renderFeedItems(items);
+					
 					if (callback !== undefined) {
 						this.element.empty();
 						callback(html);
