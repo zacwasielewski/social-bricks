@@ -15,6 +15,7 @@
             max_title_length: 50,
             max_body_length: 200,
             date_format: "dddd, MMMM Do YYYY, h:mm:ss a",
+            sort_direction: 'desc',
             template: null,
             layout: null
         },
@@ -125,8 +126,30 @@
         
         sortItems: function ( items ) {
             
-            return items;
+            var sort_dir;
             
+            switch (this.options.sort_direction) {
+                case 'asc':
+                case 'ascending':
+                    sort_dir = -1;
+                    break;
+                case 'desc':
+                case 'descending':
+                default:
+                    sort_dir = 1;
+                    break;
+            }
+            
+            // defaults to sorting by date
+            var sortFunc = function (a,b) {
+                if (a._raw_date < b._raw_date) { return sort_dir }
+                if (a._raw_date > b._raw_date) { return -sort_dir }
+                return 0;
+            };
+            
+            items.sort(sortFunc);
+            
+            return items;
         },
         
         makeNetworkUrlArgs: function (network) {
@@ -142,7 +165,7 @@
                 switch (this.options.secure) {
                     case 'detect':    args.protocol = ''; break;
                     case true:        args.protocol = 'https:'; break;
-                    case false:        args.protocol = 'http:'; break;                        
+                    case false:       args.protocol = 'http:'; break;                        
                 }
             }
             
@@ -187,8 +210,9 @@
                             link:  item.link,
                             author: item.from.name,
                             source: 'Facebook',
-                            date: moment(item.created_time).from(),
-                            image: item.picture
+                            date: moment(item.created_time).format(widget.options.date_format),
+                            image: item.picture,
+                            _raw_date: moment(item.created_time)
                         }
                     });
                 }
@@ -213,8 +237,9 @@
                             link:  item.link,
                             author: item.author,
                             source: 'RSS',
-                            date: moment(item.publishedDate).from(),
-                            image: widget._getNthImageFromHTML(item.content,0)
+                            date: moment(item.publishedDate).format(widget.options.date_format),
+                            image: widget._getNthImageFromHTML(item.content,0),
+                            _raw_date: moment(item.publishedDate)
                         }
                     });
                 }
@@ -234,8 +259,9 @@
                             body: item.message,
                             author: item.from.name,
                             source: 'Twitter',
-                            date: moment(item.created_time),
-                            image: ''
+                            date: moment(item.created_time).format(widget.options.date_format),
+                            image: '',
+                            _raw_date: moment(item.created_time)
                         }
                     });
                 }

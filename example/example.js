@@ -9,13 +9,11 @@ container.socialbricks({
 		//{name:'googleplus',id:'105588557807820541973/posts'},
 		{ name:'rss', url:'http://feeds.feedburner.com/good/lbvp' },
 		//{name:'craigslist',id:'boo',areaName:'southcoast'},
-		{ name:'rss', url:'https://github.com/zacwasielewski.atom', secure:'detect' },
-		{ name:'rss', url:'http://www.sunyit.edu/apps/calendar/export.php?type=rss&sponsortype=all&timebegin=today&categoryid=8' }
+		{ name:'rss', url:'https://github.com/zacwasielewski.atom', secure:'detect' }
 	],
-	max_items: 20
+	max_items: 20,
+	sort_direction: 'desc'
 });
-
-//container.socialbricks("fetch");
 
 container.socialbricks("fetch",function(items){
 	container.html(items);
