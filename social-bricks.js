@@ -299,55 +299,7 @@
 
             //Make sure we do not just return a letter..
             return (lastCharPosition ? text.substr(0, lastCharPosition+1) : '') + ellipseText;
-        }
-        
-        //destroy: function () {
-        //    alert('destroy');
-        //
-        //    // this.element.removeStuff();
-        //    // For UI 1.8, destroy must be invoked from the
-        //    // base widget
-        //    $.Widget.prototype.destroy.call(this);
-        //    // For UI 1.9, define _destroy instead and don't
-        //    // worry about
-        //    // calling the base widget
-        //},
-        
-        //methodB: function ( event ) {
-        //    //_trigger dispatches callbacks the plugin user
-        //    // can subscribe to
-        //    // signature: _trigger( "callbackName" , [eventObject],
-        //    // [uiObject] )
-        //    // eg. this._trigger( "hover", e /*where e.type ==
-        //    // "mouseenter"*/, { hovered: $(e.target)});
-        //    console.log("methodB called");
-        //},
-        //
-        //methodA: function ( event ) {
-        //    this._trigger("dataChanged", event, {
-        //        key: "someValue"
-        //    });
-        //},
-        
-        // Respond to any changes the user makes to the
-        // option method
-        //_setOption: function ( key, value ) {
-        //    switch (key) {
-        //    case "someValue":
-        //        //this.options.someValue = doSomethingWith( value );
-        //        break;
-        //    default:
-        //        //this.options[ key ] = value;
-        //        break;
-        //    }
-        //
-        //    // For UI 1.8, _setOption must be manually invoked
-        //    // from the base widget
-        //    $.Widget.prototype._setOption.apply( this, arguments );
-        //    // For UI 1.9 the _super method can be used instead
-        //    // this._super( "_setOption", key, value );
-        //},
-        
+        }        
                 
     });
 
