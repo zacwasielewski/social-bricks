@@ -2405,6 +2405,9 @@ jQuery.ajax = (function(_ajax){
             max_body_length: 200,
             date_format: "dddd, MMMM Do YYYY, h:mm:ss a",
             sort_direction: 'desc',
+            sort_key: '_raw_date',
+            randomize_display: false,
+            randomize_max_items: null,
             template: null,
             layout: null
         },
@@ -2441,6 +2444,13 @@ jQuery.ajax = (function(_ajax){
                         html;
                     
                     items.splice( this.options.max_items, (items.length - this.options.max_items) );
+                    
+                    if (this.options.randomize_display===true) {
+												items = this._shuffleArray(items);
+												var randomize_max_items = this.options.randomize_max_items || this.options.max_items;
+		                    items.splice( randomize_max_items, (items.length - randomize_max_items) );
+                    }
+                    
                     html = this.renderFeedItems(items);
                     
                     if (callback !== undefined) {
@@ -2515,7 +2525,9 @@ jQuery.ajax = (function(_ajax){
         
         sortItems: function ( items ) {
             
-            var sort_dir;
+            var that = this,
+    						sort_dir
+    				;
             
             switch (this.options.sort_direction) {
                 case 'asc':
@@ -2531,8 +2543,8 @@ jQuery.ajax = (function(_ajax){
             
             // defaults to sorting by date
             var sortFunc = function (a,b) {
-                if (a._raw_date < b._raw_date) { return sort_dir }
-                if (a._raw_date > b._raw_date) { return -sort_dir }
+                if (a[that.sort_key] < b[that.sort_key]) { return sort_dir }
+                if (a[that.sort_key] > b[that.sort_key]) { return -sort_dir }
                 return 0;
             };
             
@@ -2587,7 +2599,7 @@ jQuery.ajax = (function(_ajax){
                 template: '{{protocol}}//graph.facebook.com/sunyit/posts?limit={{max_items}}&access_token={{access_token}}',
                 defaults: {
                     protocol: 'https:',
-                    max_items: 10,
+                    max_items: 20,
                 },
                 required: [ 'access_token' ],
                 parser: function (json,widget) {
@@ -2610,7 +2622,7 @@ jQuery.ajax = (function(_ajax){
                 template: '{{protocol}}//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num={{max_items}}&callback=?&q={{url}}',
                 defaults: {
                     protocol: 'http:',
-                    max_items: 10,
+                    max_items: 20,
                 },
                 required: [ 'url' ],
                 prepare: {
@@ -2637,7 +2649,7 @@ jQuery.ajax = (function(_ajax){
                 template: '{{protocol}}//api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name={{username}}&count={{max_items}}',
                 defaults: {
                     protocol: 'https:',
-                    max_items: 10,
+                    max_items: 20,
                 },
                 required: [ 'username' ],
                 parser: function (json,that) {
@@ -2688,7 +2700,17 @@ jQuery.ajax = (function(_ajax){
 
             //Make sure we do not just return a letter..
             return (lastCharPosition ? text.substr(0, lastCharPosition+1) : '') + ellipseText;
-        }        
+        },
+        
+				_shuffleArray: function (array) {
+						for (var i = array.length - 1; i > 0; i--) {
+								var j = Math.floor(Math.random() * (i + 1));
+								var temp = array[i];
+								array[i] = array[j];
+								array[j] = temp;
+						}
+						return array;
+				}        
                 
     });
 
