@@ -50,9 +50,13 @@
             )
             .then(
                 $.proxy(function (results) {
-                
-                    var items = this.sortItems(this.mergeItemsArrays(results)),
-                        html;
+                    
+                    var html,
+                        items = this.mergeItemsArrays(results);
+                    
+                    if (this.options.sort_key!==false) {
+                        items = this.sortItems(items);
+                    }
                     
                     items.splice( this.options.max_items, (items.length - this.options.max_items) );
                     
